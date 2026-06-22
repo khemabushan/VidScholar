@@ -133,7 +133,7 @@ class TranscriptService:
         response.raise_for_status()
 
         data = response.json()
-
+        logger.info(f"SUPADATA RESPONSE: {data}")
         snippets = []
 
         for item in data["transcript"]:
