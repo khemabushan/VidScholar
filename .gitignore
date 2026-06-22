@@ -1,0 +1,34 @@
+# ============================================================
+# VidScholar - Git Ignore Rules
+# ============================================================
+
+# --- Environment files (never commit secrets) ---
+.env
+Backend/.env
+Frontend/.env
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+venv/
+venv_clean/
+.venv/
+*.egg-info/
+
+# --- Backend data ---
+Backend/chroma_data/
+Backend/*.db
+Backend/vidscholar.db
+
+# --- Node / Frontend ---
+node_modules/
+Frontend/dist/
+Frontend/.vite/
+*.tsbuildinfo
+
+# --- OS / Editor ---
+.DS_Store
+.vscode/
+.idea/
+*.log

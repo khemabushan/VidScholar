@@ -1,0 +1,53 @@
+# ============================================================
+# VidScholar - Docker Compose
+# ============================================================
+# Orchestrates the backend and frontend containers together so the
+# full stack can be brought up with a single command:
+#   docker-compose up --build
+#
+# The backend's chroma_data directory and SQLite database are mounted
+# as a volume so vector embeddings and metadata persist across
+# container restarts.
+
+services:
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: vidscholar-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./Backend/.env
+    volumes:
+      - ./Backend/chroma_data:/app/chroma_data
+      - vidscholar-db:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - vidscholar-network
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: vidscholar-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - vidscholar-network
+
+networks:
+  vidscholar-network:
+    driver: bridge
+
+volumes:
+  vidscholar-db:
