@@ -1,23 +1,30 @@
 # ============================================================
 # VidScholar Backend - Dependencies
 # ============================================================
-# Phase 1: web server stack
-# Phase 2: transcript extraction, vector storage, database
 
+# --- Backend API ---
 fastapi==0.115.6
 uvicorn[standard]==0.49.0
+
+# --- Configuration ---
 pydantic==2.13.4
 pydantic-settings==2.14.1
 python-dotenv==1.2.2
-httpx==0.28.1
 
-# --- Phase 2: YouTube data extraction ---
+# --- HTTP Requests ---
+httpx==0.28.1
+requests
+
+# --- YouTube Processing ---
 youtube-transcript-api==1.2.4
 pytubefix==10.10.0
+yt-dlp
 
-# --- Phase 2: Vector storage & embeddings ---
-chromadb==1.5.9
+# --- AI ---
 openai==2.43.0
 
-# --- Phase 2: Relational database (metadata) ---
+# --- Vector Database ---
+chromadb==1.5.9
+
+# --- Relational Database ---
 SQLAlchemy==2.0.51

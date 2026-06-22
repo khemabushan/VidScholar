@@ -53,7 +53,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str = ""
     OPENAI_MODEL: str = "gpt-4o-mini"
     OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"
-
+    SUPADATA_API_KEY: str = ""
     # ------------------------------------------------------------------
     # ChromaDB
     # ------------------------------------------------------------------

@@ -10,7 +10,8 @@ directly — keeping that third-party dependency isolated to this file.
 
 import logging
 from typing import List
-
+import requests
+from app.core.config import settings
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api import (
     TranscriptsDisabled,
@@ -70,10 +71,13 @@ class TranscriptService:
             raise TranscriptUnavailableError(
                 "This video is unavailable (it may be private, deleted, or region-locked)."
             ) from exc
-        except CouldNotRetrieveTranscript as exc:
-            raise TranscriptUnavailableError(
-                f"Could not retrieve a transcript for this video: {exc}"
-            ) from exc
+        except CouldNotRetrieveTranscript:
+            logger.warning(
+            f"YouTube blocked transcript for '{video_id}'. "
+            "Trying Supadata fallback."
+            )
+
+            return self._fetch_from_supadata(video_id)
 
         snippets = [
             TranscriptSnippet(text=s.text, start=s.start, duration=s.duration)
@@ -113,3 +117,36 @@ class TranscriptService:
         raise TranscriptUnavailableError(
             "No transcript is available for this video in any language."
         )
+    
+    def _fetch_from_supadata(self, video_id: str):
+        response = requests.get(
+            "https://api.supadata.ai/v1/youtube/transcript",
+            headers={
+                "x-api-key": settings.SUPADATA_API_KEY
+            },
+            params={
+                "videoId": video_id
+            },
+            timeout=30,
+        )
+
+        response.raise_for_status()
+
+        data = response.json()
+
+        snippets = []
+
+        for item in data["transcript"]:
+            snippets.append(
+                TranscriptSnippet(
+                    text=item["text"],
+                    start=float(item["start"]),
+                    duration=float(item["duration"]),
+                )
+            )
+
+        logger.info(
+            f"Fetched {len(snippets)} transcript snippets from Supadata for '{video_id}'."
+        )
+
+        return snippets
