@@ -44,7 +44,9 @@ export function ChatWindow({
   try {
     setLoadingNotes(true);
     console.log("videoRowId =", videoRowId);
-    const response = await fetch(`http://127.0.0.1:8000/notes/${videoId}`);
+    const response = await fetch(
+  `${import.meta.env.VITE_API_BASE_URL}/notes/${videoRowId}`
+);
 
     const data = await response.json();
 
