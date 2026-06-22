@@ -18,6 +18,7 @@ interface ChatWindowProps {
 
 export function ChatWindow({
   videoRowId,
+  videoId,
   videoTitle,
 }: ChatWindowProps) {
   const { turns, isStreaming, sendMessage, clearChat } = useChat(videoRowId);
@@ -39,13 +40,13 @@ export function ChatWindow({
     setDraft("");
     void sendMessage(trimmed);
   }
-  async function generateNotes() {
+ async function generateNotes() {
   try {
     setLoadingNotes(true);
-    console.log("videoRowId =", videoRowId);
+
     const response = await fetch(
-  `${import.meta.env.VITE_API_BASE_URL}/notes/${videoRowId}`
-);
+      `${import.meta.env.VITE_API_BASE_URL}/notes/${videoId}`
+    );
 
     const data = await response.json();
 
