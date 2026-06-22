@@ -136,14 +136,14 @@ class TranscriptService:
         logger.info(f"SUPADATA RESPONSE: {data}")
         snippets = []
 
-        for item in data["transcript"]:
+        for item in data["content"]:
             snippets.append(
-                TranscriptSnippet(
-                    text=item["text"],
-                    start=float(item["start"]),
-                    duration=float(item["duration"]),
-                )
-            )
+                        TranscriptSnippet(
+                            text=item["text"],
+                            start=float(item["offset"]) / 1000,
+                            duration=float(item["duration"]) / 1000,
+                        )
+                    )
 
         logger.info(
             f"Fetched {len(snippets)} transcript snippets from Supadata for '{video_id}'."
