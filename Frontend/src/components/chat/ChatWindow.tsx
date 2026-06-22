@@ -18,7 +18,6 @@ interface ChatWindowProps {
 
 export function ChatWindow({
   videoRowId,
-  videoId,
   videoTitle,
 }: ChatWindowProps) {
   const { turns, isStreaming, sendMessage, clearChat } = useChat(videoRowId);
